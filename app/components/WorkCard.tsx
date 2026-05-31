@@ -8,10 +8,26 @@ import { CONTRACT_ADDRESS, CONTRACT_ABI, USDC_ADDRESS } from "../constants";
 const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w300";
 
 const TMDB_IDS: Record<number, number> = {
-  0: 672, 1: 120, 2: 438631, 3: 11032, 4: 694,
-  5: 393, 6: 6977, 7: 238, 8: 185, 9: 10529,
-  10: 17317, 11: 907, 12: 76203, 13: 11500, 14: 72976,
-  15: 12512, 16: 770, 17: 216015, 18: 13, 19: 508947,
+  0: 672,    // Harry Potter
+  1: 120,    // Lord of the Rings
+  2: 438631, // Dune 2021
+  3: 550,    // Fight Club
+  4: 694,    // The Shining
+  5: 424,    // Schindler's List
+  6: 6977,   // No Country for Old Men
+  7: 238,    // The Godfather
+  8: 185,    // A Clockwork Orange
+  9: 11362,  // The Count of Monte Cristo 2002
+  10: 27260, // Brave New World 1998
+  11: 1427,  // Perfume: Story of a Murderer
+  12: 23488, // Dorian Gray 2009
+  13: 96724, // Anna Karenina 2012
+  14: 64682, // The Great Gatsby 2013
+  15: 8055,  // The Reader 2008
+  16: 770,   // Gone with the Wind
+  17: 49046,// All Quiet on the Western Front 2022
+  18: 13,    // Forrest Gump
+  19: 20815, // The Handmaid's Tale 1990
 };
 
 const BOOK_ISBN: Record<number, string> = {

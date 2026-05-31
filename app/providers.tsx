@@ -8,7 +8,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 
 const config = getDefaultConfig({
   appName: "ArcBookVsMovie",
-  733fefb7ef99b7d7264bba32048913f7
+  projectId: "733fefb7ef99b7d7264bba32048913f7",
   chains: [ARC_TESTNET as any],
   ssr: true,
 });

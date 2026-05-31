@@ -85,7 +85,18 @@ export default function WorkCard({ workId, name }: WorkCardProps) {
       // Adım 1: USDC harcama izni ver (MetaMask ilk onay)
       await writeContractAsync({
         address: USDC_ADDRESS as `0x${string}`,
-        abi: ["function approve(address spender, uint256 amount) external returns (bool)"],
+        abi: [
+  {
+    name: "approve",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "spender", type: "address" },
+      { name: "amount", type: "uint256" },
+    ],
+    outputs: [{ name: "", type: "bool" }],
+  },
+],
         functionName: "approve",
         args: [CONTRACT_ADDRESS, parseUnits("0.001", 6)],
       });

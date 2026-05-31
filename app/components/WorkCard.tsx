@@ -75,6 +75,7 @@ export default function WorkCard({ workId, name }: WorkCardProps) {
   }
 
   async function handleVote(isFilm: boolean) {
+    console.log("handleVote called", isFilm, isConnected);
     if (!isConnected) {
       alert("Please connect your wallet first!");
       return;

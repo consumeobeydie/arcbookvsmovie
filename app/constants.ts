@@ -1,6 +1,4 @@
-export const CONTRACT_ADDRESS = "0x3a33bF31930FB32eEAd6e2D6e02c8984b5cB1095";
-
-export const USDC_ADDRESS = "0x3600000000000000000000000000000000000000";
+export const CONTRACT_ADDRESS = "0x68f64B8c0c01b559A669AD57eA450457c543EE8e";
 
 export const ARC_TESTNET = {
   id: 5042002,
@@ -28,7 +26,7 @@ export const CONTRACT_ABI = [
   {
     name: "vote",
     type: "function",
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     inputs: [
       { name: "workId", type: "uint8" },
       { name: "isFilm", type: "bool" },

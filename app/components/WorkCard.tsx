@@ -47,7 +47,7 @@ export default function WorkCard({ workId, name }: WorkCardProps) {
     address: CONTRACT_ADDRESS as `0x${string}`,
     abi: CONTRACT_ABI,
     functionName: "hasVoted",
-    args: [address, workId],
+    args: [address as `0x${string}`, workId],
     query: { enabled: !!address },
   });
 

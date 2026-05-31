@@ -76,12 +76,7 @@ export default function WorkCard({ workId, name }: WorkCardProps) {
   async function fetchMoviePoster() {
     try {
       const id = TMDB_IDS[workId];
-      const res = await fetch(
-        `https://api.themoviedb.org/3/movie/${id}?language=en-US`,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_TOKEN}`,
-          },
+      const res = await fetch(`/api/poster?id=${id}`);
         }
       );
       const data = await res.json();

@@ -82,6 +82,7 @@ export default function WorkCard({ workId, name }: WorkCardProps) {
         abi: CONTRACT_ABI,
         functionName: "vote",
         args: [workId, isFilm],
+        value: BigInt(1000),
       });
       await refetch();
     } catch (e: any) {

@@ -75,13 +75,14 @@ export default function WorkCard({ workId, name }: WorkCardProps) {
 
   async function fetchMoviePoster() {
     try {
+      async function fetchMoviePoster() {
+    try {
       const id = TMDB_IDS[workId];
       const res = await fetch(`/api/poster?id=${id}`);
-        }
-      );
       const data = await res.json();
       if (data.poster_path) setMoviePoster(TMDB_IMAGE_BASE + data.poster_path);
     } catch (e) {}
+  }
   }
 
   async function fetchBookCover() {

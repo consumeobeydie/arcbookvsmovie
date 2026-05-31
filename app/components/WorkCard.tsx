@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAccount, useWriteContract, useReadContract } from "wagmi";
-import { parseUnits } from "viem";
-import { CONTRACT_ADDRESS, CONTRACT_ABI, USDC_ADDRESS } from "../constants";
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../constants";
 
 const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w300";
 
@@ -35,10 +34,8 @@ export default function WorkCard({ workId, name }: WorkCardProps) {
   const [bookCover, setBookCover] = useState<string | null>(null);
   const [voting, setVoting] = useState(false);
 
-  // writeContractAsync MetaMask'ı açan fonksiyon
   const { writeContractAsync } = useWriteContract();
 
-  // Oy sayılarını blockchain'den oku
   const { data: results, refetch } = useReadContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
     abi: CONTRACT_ABI,
@@ -46,7 +43,6 @@ export default function WorkCard({ workId, name }: WorkCardProps) {
     args: [workId],
   });
 
-  // Bu cüzdan daha önce oy kullandı mı?
   const { data: hasVotedData } = useReadContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
     abi: CONTRACT_ABI,
@@ -75,48 +71,21 @@ export default function WorkCard({ workId, name }: WorkCardProps) {
   }
 
   async function handleVote(isFilm: boolean) {
-    console.log("handleVote called", isFilm, isConnected);
     if (!isConnected) {
       alert("Please connect your wallet first!");
       return;
     }
     setVoting(true);
     try {
-      // Adım 1: USDC harcama izni ver (MetaMask ilk onay)
-      await writeContractAsync({
-        address: USDC_ADDRESS as `0x${string}`,
-        abi: [
-  {
-    name: "approve",
-    type: "function",
-    stateMutability: "nonpayable",
-    inputs: [
-      { name: "spender", type: "address" },
-      { name: "amount", type: "uint256" },
-    ],
-    outputs: [{ name: "", type: "bool" }],
-  },
-],
-        functionName: "approve",
-        args: [CONTRACT_ADDRESS, parseUnits("0.001", 6)],
-      });
-
-      // Adım 2: 3 saniye bekle (blockchain onaylasın)
-      await new Promise(r => setTimeout(r, 3000));
-
-      // Adım 3: Oyu blockchain'e gönder (MetaMask ikinci onay)
       await writeContractAsync({
         address: CONTRACT_ADDRESS as `0x${string}`,
         abi: CONTRACT_ABI,
         functionName: "vote",
         args: [workId, isFilm],
       });
-
-      // Adım 4: Oy sayılarını güncelle
       await refetch();
-
     } catch (e: any) {
-      alert(e.message || "Something went wrong");
+      alert(e.message || "Error");
     }
     setVoting(false);
   }

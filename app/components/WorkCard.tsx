@@ -75,24 +75,36 @@ export default function WorkCard({ workId, name }: WorkCardProps) {
     if (!isConnected) return alert("Please connect your wallet first!");
     setVoting(true);
     try {
-      await writeContract({
+      writeContract({
         address: USDC_ADDRESS as `0x${string}`,
         abi: ["function approve(address spender, uint256 amount) external returns (bool)"],
         functionName: "approve",
         args: [CONTRACT_ADDRESS, parseUnits("0.001", 6)],
+        onSuccess: () => {
+          writeContract({
+            address: CONTRACT_ADDRESS as `0x${string}`,
+            abi: CONTRACT_ABI,
+            functionName: "vote",
+            args: [workId, isFilm],
+            onSuccess: () => {
+              refetch();
+              setVoting(false);
+            },
+            onError: (e: any) => {
+              alert(e.message || "Vote failed");
+              setVoting(false);
+            },
+          });
+        },
+        onError: (e: any) => {
+          alert(e.message || "Approve failed");
+          setVoting(false);
+        },
       });
-      await new Promise(r => setTimeout(r, 2000));
-      await writeContract({
-        address: CONTRACT_ADDRESS as `0x${string}`,
-        abi: CONTRACT_ABI,
-        functionName: "vote",
-        args: [workId, isFilm],
-      });
-      await refetch();
     } catch (e: any) {
-      alert(e.message || "Vote failed");
+      alert(e.message || "Error");
+      setVoting(false);
     }
-    setVoting(false);
   }
 
   const bookVotes = results ? Number((results as any)[1]) : 0;

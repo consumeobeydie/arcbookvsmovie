@@ -35,8 +35,10 @@ export default function WorkCard({ workId, name }: WorkCardProps) {
   const [bookCover, setBookCover] = useState<string | null>(null);
   const [voting, setVoting] = useState(false);
 
-  const { writeContract } = useWriteContract();
+  // writeContractAsync MetaMask'ı açan fonksiyon
+  const { writeContractAsync } = useWriteContract();
 
+  // Oy sayılarını blockchain'den oku
   const { data: results, refetch } = useReadContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
     abi: CONTRACT_ABI,
@@ -44,6 +46,7 @@ export default function WorkCard({ workId, name }: WorkCardProps) {
     args: [workId],
   });
 
+  // Bu cüzdan daha önce oy kullandı mı?
   const { data: hasVotedData } = useReadContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
     abi: CONTRACT_ABI,
@@ -72,39 +75,38 @@ export default function WorkCard({ workId, name }: WorkCardProps) {
   }
 
   async function handleVote(isFilm: boolean) {
-    if (!isConnected) return alert("Please connect your wallet first!");
+    if (!isConnected) {
+      alert("Please connect your wallet first!");
+      return;
+    }
     setVoting(true);
     try {
-      writeContract({
+      // Adım 1: USDC harcama izni ver (MetaMask ilk onay)
+      await writeContractAsync({
         address: USDC_ADDRESS as `0x${string}`,
         abi: ["function approve(address spender, uint256 amount) external returns (bool)"],
         functionName: "approve",
         args: [CONTRACT_ADDRESS, parseUnits("0.001", 6)],
-        onSuccess: () => {
-          writeContract({
-            address: CONTRACT_ADDRESS as `0x${string}`,
-            abi: CONTRACT_ABI,
-            functionName: "vote",
-            args: [workId, isFilm],
-            onSuccess: () => {
-              refetch();
-              setVoting(false);
-            },
-            onError: (e: any) => {
-              alert(e.message || "Vote failed");
-              setVoting(false);
-            },
-          });
-        },
-        onError: (e: any) => {
-          alert(e.message || "Approve failed");
-          setVoting(false);
-        },
       });
+
+      // Adım 2: 3 saniye bekle (blockchain onaylasın)
+      await new Promise(r => setTimeout(r, 3000));
+
+      // Adım 3: Oyu blockchain'e gönder (MetaMask ikinci onay)
+      await writeContractAsync({
+        address: CONTRACT_ADDRESS as `0x${string}`,
+        abi: CONTRACT_ABI,
+        functionName: "vote",
+        args: [workId, isFilm],
+      });
+
+      // Adım 4: Oy sayılarını güncelle
+      await refetch();
+
     } catch (e: any) {
-      alert(e.message || "Error");
-      setVoting(false);
+      alert(e.message || "Something went wrong");
     }
+    setVoting(false);
   }
 
   const bookVotes = results ? Number((results as any)[1]) : 0;

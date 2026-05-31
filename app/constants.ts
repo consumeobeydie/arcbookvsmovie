@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0x3a33bF31930FB32eEAd6e2D6e02c8984b5cB1095";
+export const CONTRACT_ADDRESS = "BURAYA_SOZLESME_ADRESINI_YAZ";
 
 export const USDC_ADDRESS = "0x3600000000000000000000000000000000000000";
 
@@ -25,8 +25,46 @@ export const ARC_TESTNET = {
 };
 
 export const CONTRACT_ABI = [
-  "function vote(uint8 workId, bool isFilm) external",
-  "function getResults(uint8 workId) external view returns (string memory name, uint256 book, uint256 film)",
-  "function getAllResults() external view returns (string[20] memory names, uint256[20] memory book, uint256[20] memory film)",
-  "function hasVoted(address voter, uint8 workId) external view returns (bool)",
-];
+  {
+    name: "vote",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "workId", type: "uint8" },
+      { name: "isFilm", type: "bool" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "getResults",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "workId", type: "uint8" }],
+    outputs: [
+      { name: "name", type: "string" },
+      { name: "book", type: "uint256" },
+      { name: "film", type: "uint256" },
+    ],
+  },
+  {
+    name: "getAllResults",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [
+      { name: "names", type: "string[20]" },
+      { name: "book", type: "uint256[20]" },
+      { name: "film", type: "uint256[20]" },
+    ],
+  },
+  {
+    name: "hasVoted",
+    type: "function",
+    stateMutability: "view",
+    inputs: [
+      { name: "voter", type: "address" },
+      { name: "workId", type: "uint8" },
+    ],
+    outputs: [{ name: "", type: "bool" }],
+  },
+] as const;
